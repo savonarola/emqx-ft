@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "emqx-ft"
+version = "0.1.0"
+description = "EMQX file transfer CLI tool"
+authors = ["Ilya Averyanov <av@rubybox.ru>"]
+license = "Apache"
+readme = "README.md"
+packages = [{include = "emqx_ft", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+paho-mqtt = "^1.6.1"
+
+[tool.poetry.scripts]
+emqx-ft = "emqx_ft.main:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

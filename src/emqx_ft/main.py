@@ -32,6 +32,7 @@ def main():
     topic_prefix = f"$file/{args.file_id}"
 
     client = mqtt.Client()
+    client.protocol_version = mqtt.MQTTv5
     client.enable_logger(logging.getLogger())
     client.connect(args.host, args.port, 60)
     client.publish(f"{topic_prefix}/init", json.dumps(meta), qos=1)

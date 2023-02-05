@@ -14,7 +14,8 @@ def main():
     parser.add_argument("--host", default="127.0.0.1", type=str)
     parser.add_argument("--file", required=True, type=argparse.FileType("r"))
     parser.add_argument("--segment-size", default=1024, type=int)
-    parser.add_argument("--file-id", required=True, type=int)
+    parser.add_argument("--file-id", required=True, type=str)
+    parser.add_argument("--client-id", required=True, type=str)
     args = parser.parse_args()
 
     data = open(args.file.name, "rb").read()
@@ -31,7 +32,7 @@ def main():
 
     topic_prefix = f"$file/{args.file_id}"
 
-    client = mqtt.Client()
+    client = mqtt.Client(client_id=args.client_id)
     client.protocol_version = mqtt.MQTTv5
     client.enable_logger(logging.getLogger())
     client.connect(args.host, args.port, 60)
@@ -40,7 +41,11 @@ def main():
         client.publish(f"{topic_prefix}/{offset}", chunk, qos=1)
     client.publish(f"{topic_prefix}/fin", "", qos=1)
 
-    client.loop_forever()
+    try:
+        client.loop_forever()
+    except KeyboardInterrupt:
+        client.disconnect()
+        print("Disconnected")
 
 
 def segments(data, segment_size):

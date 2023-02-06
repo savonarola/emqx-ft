@@ -39,7 +39,13 @@ def main():
     client.publish(f"{topic_prefix}/init", json.dumps(meta), qos=1)
     for offset, chunk in segments(data, args.segment_size):
         client.publish(f"{topic_prefix}/{offset}", chunk, qos=1)
-    client.publish(f"{topic_prefix}/fin", "", qos=1)
+    info = client.publish(f"{topic_prefix}/fin", "", qos=1)
+
+    def on_publish(client, userdata, mid):
+        if mid == info.mid:
+            client.disconnect()
+
+    client.on_publish = on_publish
 
     try:
         client.loop_forever()

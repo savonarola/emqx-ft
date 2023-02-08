@@ -26,8 +26,7 @@ def main():
 
     meta = {
         "name": args.file.name,
-        "size": len(data),
-        # "checksum": checksum
+        "size": len(data)
     }
 
     topic_prefix = f"$file/{args.file_id}"
